@@ -1,0 +1,40 @@
+{
+  "name": "electron-modules-sample",
+  "private": true,
+  "description": "electron modules sample",
+  "keywords": [
+    "electron",
+    "sample"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/electron-modules/electron-modules-sample.git"
+  },
+  "dependencies": {
+    "electrom": "19",
+    "electron": "18",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "7",
+    "eslint-config-egg": "^5.1.1",
+    "eslint-plugin-mocha": "^4.11.0",
+    "git-contributor": "*",
+    "husky": "*",
+    "mocha": "*",
+    "nyc": "*"
+  },
+  "scripts": {
+    "dev": "electron ./start.js",
+    "test": "nyc --reporter=lcov --reporter=text mocha",
+    "lint": "eslint . --fix",
+    "contributor": "git-contributor"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "license": "MIT"
+}
