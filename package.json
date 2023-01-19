@@ -35,7 +35,7 @@
     "typescript": "^4.6.3"
   },
   "scripts": {
-    "dev": "electron -r ts-node/register/transpile-only ./src/app.ts",
+    "dev": "electron -r ts-node/register/transpile-only ./src/main.ts",
     "test": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . --fix",
     "translate": "easy-i18n-cli -c ./i18n.config.js",
