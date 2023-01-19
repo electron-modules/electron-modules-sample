@@ -1,6 +1,6 @@
 'use strict';
 
-import { ipcRenderer, desktopCapturer, contextBridge } from 'electron';
+const { ipcRenderer, desktopCapturer, contextBridge } = require('electron');
 
 contextBridge.exposeInMainWorld(
   '_electron_bridge',

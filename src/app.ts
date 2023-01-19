@@ -27,6 +27,8 @@ export default class App {
         url: loadingUrl,
       },
       browserWindow: {
+        width: 640,
+        height: 400,
         webPreferences: {
           enableRemoteModule: false,
           nodeIntegration: false,

@@ -8,10 +8,6 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    * {
-      overflow: hidden;
-      box-sizing: border-box;
-    }
     html,
     body {
       background-color: white;
@@ -20,21 +16,34 @@
       margin: 0;
       padding: 0;
     }
-    .wrapper {
-      text-align: center;
-      padding-top: 100px;
+    h2, ol {
+      margin: 0;
+      padding: 0;
     }
-    .custom-iframe {
-      margin-top: 20px;
-      border: none;
-      width: 100%;
-      height: calc(100vh - 140px)
+    ol {
+      padding-left: 20px;
+    }
+    li {
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    .wrapper {
+      padding: 20px;
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <button id="new">new</button>
+    <h2>Electron Modules</h2>
+    <a href="https://github.com/electron-modules" target="_blank">
+      https://github.com/electron-modules
+    </a>
+    <hr />
+    <ol>
+      <li>Electrom</li>
+      <li>Electron Windows</li>
+      <li>Electron Updator</li>
+    <ol>
   </div>
   <script src="./main.js"></script>
 </body>
