@@ -1,44 +1,24 @@
-import url from 'url';
-import path from 'path';
-import WindowManager from 'electron-windows';
+import { ipcMain } from 'electron';
 
 export default class App {
-  windowManager = new WindowManager();
-
   init() {
-    this.initWindows();
+    this.initWindowsManager();
+    this.bindIPC();
   }
 
-  initWindows() {
-    const rendererDir = path.resolve(__dirname, 'renderer');
-    const loadingUrl = url.format({
-      pathname: path.resolve(rendererDir, 'loading.html'),
-      protocol: 'file:',
-    });
-    const mainUrl = url.format({
-      pathname: path.resolve(rendererDir, 'main.html'),
-      protocol: 'file:',
-    });
-    const preload = path.resolve(rendererDir, 'preload.js');
+  initWindowsManager() {
+    require('./window-manager')(this);
+  }
 
-    const mainWindow = this.windowManager.create({
-      name: 'main',
-      loadingView: {
-        url: loadingUrl,
-      },
-      browserWindow: {
-        width: 640,
-        height: 400,
-        webPreferences: {
-          enableRemoteModule: false,
-          nodeIntegration: false,
-          webSecurity: true,
-          webviewTag: true,
-          preload,
-        },
-      },
-      openDevTools: false,
+  initElectrom() {
+    require('./electrom')(this);
+  }
+
+  bindIPC() {
+    ipcMain.on('start-action', (_, action) => {
+      if (action === 'electrom') {
+        this.initElectrom();
+      }
     });
-    mainWindow.loadURL(mainUrl);
   }
 }

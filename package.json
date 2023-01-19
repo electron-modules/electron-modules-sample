@@ -18,6 +18,7 @@
     "lodash": "4"
   },
   "devDependencies": {
+    "@applint/spec": "^1.2.3",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.181",
     "cross-env": "^7.0.3",
@@ -26,6 +27,8 @@
     "eslint-config-egg": "^5.1.1",
     "eslint-plugin-mocha": "^4.11.0",
     "git-contributor": "*",
+    "gulp": "^4.0.2",
+    "gulp-nodemon": "^2.5.0",
     "husky": "*",
     "mocha": "*",
     "nyc": "^15.1.0",
@@ -35,7 +38,8 @@
     "typescript": "^4.6.3"
   },
   "scripts": {
-    "dev": "electron -r ts-node/register/transpile-only ./src/main.ts",
+    "dev": "gulp dev-app",
+    "dev:watch": "gulp dev-app --watch",
     "test": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . --fix",
     "translate": "easy-i18n-cli -c ./i18n.config.js",

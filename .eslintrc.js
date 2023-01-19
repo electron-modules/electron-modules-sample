@@ -2,6 +2,7 @@ const { getESLintConfig } = require('@applint/spec');
 
 module.exports = getESLintConfig('react-ts', {
   rules: {
+    'id-length': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,
