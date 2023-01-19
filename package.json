@@ -21,6 +21,7 @@
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.181",
     "cross-env": "^7.0.3",
+    "easy-i18n-cli": "1",
     "eslint": "7",
     "eslint-config-egg": "^5.1.1",
     "eslint-plugin-mocha": "^4.11.0",
@@ -37,6 +38,8 @@
     "dev": "electron -r ts-node/register/transpile-only ./src/app.ts",
     "test": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . --fix",
+    "translate": "easy-i18n-cli -c ./i18n.config.js",
+    "translate:check": "npm run translate -- --check",
     "contributor": "git-contributor"
   },
   "husky": {
