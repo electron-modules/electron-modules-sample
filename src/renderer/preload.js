@@ -1,6 +1,9 @@
 'use strict';
 
-const { ipcRenderer, desktopCapturer, contextBridge } = require('electron');
+const {
+  ipcRenderer, shell,
+  desktopCapturer, contextBridge,
+} = require('electron');
 
 contextBridge.exposeInMainWorld(
   '_electron_bridge',
@@ -9,5 +12,16 @@ contextBridge.exposeInMainWorld(
       ipcRenderer.send(channel, args);
     },
     desktopCapturer,
-  }
+  },
 );
+
+document.addEventListener('click', e => {
+  const { target } = e;
+  if (target.nodeName === 'A') {
+    if (e.defaultPrevented) return;
+    if (target.href) {
+      e.preventDefault();
+      shell.openExternal(target.href);
+    }
+  }
+}, false);
