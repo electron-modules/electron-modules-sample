@@ -23,20 +23,4 @@ module.exports = getESLintConfig('react-ts', {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
   },
-  overrides: [
-    {
-      files: ['src/renderer/**'],
-      rules: {
-        'react-hooks/rules-of-hooks': 0,
-      },
-    },
-    {
-      files: ['src/main/**'],
-      rules: {
-        'no-mixed-operators': 1,
-        'react/jsx-closing-tag-location': 1,
-        '@typescript-eslint/no-shadow': 1,
-      },
-    },
-  ],
 });
