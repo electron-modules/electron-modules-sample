@@ -2,6 +2,11 @@
 
 ---
 
+[![CI][CI-image]][CI-url]
+
+[CI-image]: https://github.com/electron-modules/electron-modules-sample/actions/workflows/ci.yml/badge.svg
+[CI-url]: https://github.com/electron-modules/electron-modules-sample/actions/workflows/ci.yml
+
 The All-In-One sample for https://github.com/electron-modules
 
 ## Develop
