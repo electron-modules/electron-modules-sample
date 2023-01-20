@@ -2,26 +2,20 @@ import { ipcMain } from 'electron';
 
 export default class App {
   init() {
-    this.initWindowsManager();
-    this.bindIPC();
-  }
-
-  initWindowsManager() {
     require('./window-manager')(this);
-  }
-
-  initElectrom() {
-    require('./electrom')(this);
+    this.bindIPC();
   }
 
   bindIPC() {
     ipcMain.on('start-action', (_, action) => {
       if (action === 'electrom') {
-        this.initElectrom();
+        require('./electrom')(this);
       } else if (action === 'electron-windows') {
-
+        require('./multi-windows')(this);
       } else if (action === 'electron-updator') {
         require('./updator')(this);
+      } else if (action === 'electron-webview-schedule') {
+        require('./webview-schedule')(this);
       }
     });
   }

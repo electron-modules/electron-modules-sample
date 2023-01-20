@@ -21,16 +21,17 @@
       padding: 0;
     }
     .wrapper {
-      text-align: center;
-      padding-top: 100px;
     }
   </style>
+  <script src="../../../node_modules/moment/min/moment.min.js"></script>
 </head>
 <body>
   <div class="wrapper">
-    <div class="loading">
-      loading...
-    </div>
+    <div id="desc"></div>
+    <button id="remove">set remove tag</button>
+    <button id="crash">crash</button>
+    <button id="hang">hang</button>
   </div>
+  <script src="./webview.js"></script>
 </body>
 </html>
