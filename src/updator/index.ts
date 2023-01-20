@@ -3,12 +3,18 @@
 import crypto from 'crypto';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
+import httpServer from './http-server';
 
 console.log('version: %s', ElectronUpdatorVersion);
 
 const { MacUpdator, EventType } = ElectronUpdator;
 
+const updatorData = {
+  version: '1',
+};
+
 module.exports = (app: any) => {
+  httpServer({ port: 8888, data: updatorData });
   // 1. 构造 options
   const verify = crypto.createVerify('SHA256');
   const options = {

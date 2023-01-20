@@ -11,7 +11,8 @@
     "url": "git://github.com/electron-modules/electron-modules-sample.git"
   },
   "dependencies": {
-    "@electron/remote": "^2.0.9",
+    "@electron/remote": "2",
+    "detect-port": "1",
     "electrom": "19",
     "electron": "18",
     "electron-json-storage-alt": "18",
