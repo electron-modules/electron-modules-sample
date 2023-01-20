@@ -13,5 +13,5 @@ contextBridge.exposeInMainWorld(
     },
     crash: () => process.crash(),
     hang: () => process.hang(),
-  }
+  },
 );

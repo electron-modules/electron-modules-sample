@@ -2,6 +2,6 @@
 
 import ElectronUpdator from 'electron-updator';
 
-module.exports = (app) => {
+module.exports = (app: any) => {
   console.log(ElectronUpdator);
 };

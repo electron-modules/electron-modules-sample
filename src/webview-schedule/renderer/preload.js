@@ -12,6 +12,6 @@ contextBridge.exposeInMainWorld(
       version: process.version,
       versions: process.versions,
     },
-  }
+  },
 );
 
