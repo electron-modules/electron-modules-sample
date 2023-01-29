@@ -3,25 +3,24 @@
 import crypto from 'crypto';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
-import httpServer from './http-server';
 
 console.log('version: %s', ElectronUpdatorVersion);
 
 const { MacUpdator, EventType } = ElectronUpdator;
 
-const updatorData = {
-  version: '1',
-};
+// npm run ss
+function getRequestFeedUrl() {
+  return 'http://localhost:8888/fixtures/data/res1.json';
+}
 
 module.exports = (app: any) => {
-  httpServer({ port: 8888, data: updatorData });
   // 1. 构造 options
   const verify = crypto.createVerify('SHA256');
   const options = {
     logger: console, // logger
     verify, // verify
     verifyPublicKey: '',
-    requestFeedUrl: '',
+    requestFeedUrl: getRequestFeedUrl(),
     productName: '-',
     responseFormatter: (res) => {
       console.log(res);
