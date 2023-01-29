@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@applint/spec": "^1.2.3",
+    "@electron/asar": "3",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.181",
     "cross-env": "^7.0.3",
