@@ -9,6 +9,14 @@
 
 The All-In-One sample for https://github.com/electron-modules
 
+<p align="center">
+  <img
+    alt="Macaca"
+    src="./demo.png"
+    width="480"
+  />
+</p>
+
 ## Develop
 
 ```bash
