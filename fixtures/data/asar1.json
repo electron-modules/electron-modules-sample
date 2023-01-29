@@ -1,0 +1,8 @@
+{
+  "version": "0.1.0",
+  "project_version": 101,
+  "files": [{
+    "url": "http://localhost:8888/fixtures/demo.asar.zip"
+  }],
+  "updateType": "asar"
+}

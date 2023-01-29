@@ -22,7 +22,8 @@
     "electron-windows-titlebar": "1",
     "lodash": "4",
     "moment": "^2.29.4",
-    "network-interface": "18"
+    "network-interface": "18",
+    "semver": "^7.3.8"
   },
   "devDependencies": {
     "@applint/spec": "^1.2.3",

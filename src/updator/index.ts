@@ -1,6 +1,6 @@
 'use strict';
 
-import crypto from 'crypto';
+import semver from 'semver';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
 
@@ -9,46 +9,53 @@ console.log('version: %s', ElectronUpdatorVersion);
 const { MacUpdator, EventType } = ElectronUpdator;
 
 // npm run ss
-function getRequestFeedUrl() {
-  return 'http://localhost:8888/fixtures/data/res1.json';
+function getFeedUrl() {
+  return 'http://localhost:8888/fixtures/data/asar1.json';
 }
+
+const currentVersion = '0.0.1';
+const currentBuildNumber = 100;
 
 module.exports = (app: any) => {
   // 1. 构造 options
-  const verify = crypto.createVerify('SHA256');
   const options = {
+    url: getFeedUrl(),
     logger: console, // logger
-    verify, // verify
-    verifyPublicKey: '',
-    requestFeedUrl: getRequestFeedUrl(),
-    productName: '-',
+    productName: 'demo',
     responseFormatter: (res) => {
-      console.log(res);
+      console.log('updator >> responseFormatter', res);
+      return res;
+    },
+    needUpdate: (res) => {
+      return semver.lt(res.version, currentVersion)
+        || res.project_version <= currentBuildNumber,
     },
   };
   // 2. 初始化 updator 实例
   const electronUpdator = new MacUpdator(options);
   // 3. 绑定全局事件
-  electronUpdator.on(EventType.UpdateDownloaded, (needRemind) => {
-    console.log(EventType.UpdateDownloaded);
-    console.log(needRemind);
+  electronUpdator.on(EventType.UPDATE_DOWNLOADED, (...args) => {
+    console.log('updator >> %s, args: %j', EventType.UPDATE_DOWNLOADED, args);
   });
-  electronUpdator.on(EventType.CheckingForUpdate, (needRemind) => {
-    console.log(EventType.CheckingForUpdate);
-    console.log(needRemind);
+  electronUpdator.on(EventType.CHECKING_FOR_UPDATE, (...args) => {
+    console.log('updator >> %s, args: %j', EventType.CHECKING_FOR_UPDATE, args);
   });
-  electronUpdator.on(EventType.Error, (needRemind) => {
-    console.log(EventType.Error);
-    console.log(needRemind);
+  electronUpdator.on(EventType.UPDATE_AVAILABLE, (...args) => {
+    console.log('updator >> %s, args: %j', EventType.UPDATE_AVAILABLE, args);
   });
-  electronUpdator.on(EventType.UpdateDownloadProgress, (data) => {
-    console.log(EventType.UpdateDownloadProgress);
+  electronUpdator.on(EventType.UPDATE_NOT_AVAILABLE, (...args) => {
+    console.log('updator >> %s, args: %j', EventType.UPDATE_NOT_AVAILABLE, args);
   });
-  electronUpdator.on(EventType.UpdateNotAvailable, () => {
-    console.log(EventType.UpdateNotAvailable);
+  electronUpdator.on(EventType.ERROR, (...args) => {
+    console.log('updator >> %s, args: %j', EventType.ERROR, args);
   });
-  electronUpdator.on(EventType.UpdateClose, () => {
-    console.log(EventType.UpdateClose);
+  electronUpdator.on(EventType.UPDATE_DOWNLOAD_PROGRESS, (...args) => {
+    console.log('updator >> %s, args: %j', EventType.UPDATE_DOWNLOAD_PROGRESS, args);
   });
   app.electronUpdator = electronUpdator;
+  setTimeout(() => {
+    app.electronUpdator.checkForUpdates();
+    // app.electronUpdator.downloadUpdate();
+    // app.electronUpdator.quitAndInstall();
+  }, 1000);
 };
