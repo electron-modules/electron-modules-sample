@@ -1,10 +1,10 @@
 'use strict';
 
-document.querySelector('#checkForUpdates:available').addEventListener('click', () => {
+document.querySelector('#checkForUpdates_available').addEventListener('click', () => {
   window._electron_bridge.send('updator:checkForUpdates:available');
 }, false);
 
-document.querySelector('#checkForUpdates:notAvailable').addEventListener('click', () => {
+document.querySelector('#checkForUpdates_notAvailable').addEventListener('click', () => {
   window._electron_bridge.send('updator:checkForUpdates:notAvailable');
 }, false);
 

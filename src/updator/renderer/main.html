@@ -7,10 +7,6 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    * {
-      overflow: hidden;
-      box-sizing: border-box;
-    }
     html,
     body {
       background-color: white;
@@ -19,9 +15,32 @@
       margin: 0;
       padding: 0;
     }
+    hr {
+      margin: 24px 0;
+      border: none;
+      height: 1px;
+      background-color: #ebebeb;
+    }
+    h2, ol {
+      margin: 0;
+      padding: 0;
+    }
+    ol {
+      padding-left: 20px;
+    }
+    li {
+      margin: 16px 0;
+      padding: 4px;
+      cursor: pointer;
+      background-color: aliceblue;
+      font-weight: bold;
+      border-radius: 2px;
+    }
+    li:hover {
+      background-color: antiquewhite;
+    }
     .wrapper {
-      text-align: center;
-      padding-top: 100px;
+      padding: 20px;
     }
   </style>
 </head>
@@ -29,8 +48,8 @@
   <div class="wrapper">
     <li>
       checkForUpdates
-      <button id="checkForUpdates:available">available</button>
-      <button id="checkForUpdates:notAvailable">notAvailable</button>
+      <button id="checkForUpdates_available">available</button>
+      <button id="checkForUpdates_notAvailable">notAvailable</button>
     </li>
     <li>
       downloadUpdate
