@@ -1,5 +1,7 @@
 'use strict';
 
+import url from 'url';
+import path from 'path';
 import semver from 'semver';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
@@ -53,9 +55,29 @@ module.exports = (app: any) => {
     console.log('updator >> %s, args: %j', EventType.UPDATE_DOWNLOAD_PROGRESS, args);
   });
   app.electronUpdator = electronUpdator;
-  setTimeout(() => {
-    app.electronUpdator.checkForUpdates();
-    // app.electronUpdator.downloadUpdate();
-    // app.electronUpdator.quitAndInstall();
-  }, 1000);
+
+  const mainUrl = url.format({
+    pathname: path.join(__dirname, 'renderer', 'main.html'),
+    protocol: 'file:',
+  });
+  const loadingUrl = url.format({
+    pathname: path.join(__dirname, 'renderer', 'loading.html'),
+    protocol: 'file:',
+  });
+
+  const window = app.windowManager.create({
+    name: 'updator',
+    loadingView: {
+      url: loadingUrl,
+    },
+    browserWindow: {
+      webPreferences: {
+        nodeIntegration: true,
+        webSecurity: true,
+        webviewTag: true,
+        preload: path.join(__dirname, 'renderer', 'preload.js'),
+      },
+    },
+  });
+  window.loadURL(mainUrl);
 };
