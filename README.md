@@ -23,8 +23,6 @@ The All-In-One sample for https://github.com/electron-modules
 $ npm run dev
 ```
 
-## Contributor
-
 <!-- GITCONTRIBUTOR_START -->
 
 ## Contributors
