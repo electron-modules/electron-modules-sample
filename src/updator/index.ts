@@ -28,7 +28,7 @@ module.exports = (app: any) => {
     },
     needUpdate: (res) => {
       return semver.lt(res.version, currentVersion)
-        || res.project_version <= currentBuildNumber,
+        || res.project_version <= currentBuildNumber;
     },
   };
   // 2. 初始化 updator 实例
