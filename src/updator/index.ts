@@ -11,14 +11,13 @@ console.log('version: %s', ElectronUpdatorVersion);
 
 const { MacUpdator, EventType } = ElectronUpdator;
 
-let feedUrlTag = 'asar1';
-const feedUrlsMap = {
-  asar1: 'http://localhost:8888/fixtures/data/asar1.json',
-  asar2: 'http://localhost:8888/fixtures/data/asar2.json',
-  package1: 'http://localhost:8888/fixtures/data/package1.json'
-};
 // npm run ss
-function getFeedUrl() {
+function getFeedUrl(feedUrlTag = 'asar1') {
+  const feedUrlsMap = {
+    asar1: 'http://localhost:8888/fixtures/data/asar1.json',
+    asar2: 'http://localhost:8888/fixtures/data/asar2.json',
+    package1: 'http://localhost:8888/fixtures/data/package1.json'
+  };
   return feedUrlsMap[feedUrlTag];
 }
 
@@ -53,27 +52,52 @@ module.exports = (app: any) => {
     console.log('updator >> %s, args: %j', EventType.CHECKING_FOR_UPDATE, args);
   });
   electronUpdator.on(EventType.UPDATE_AVAILABLE, (...args) => {
-    console.log('updator >> %s, args: %j', EventType.UPDATE_AVAILABLE, args);
+    const { version, project_version } = args[0]?.updateInfo || {};
+    const message = [
+      'available',
+      `local version: ${currentVersion}`,
+      `local project version: ${currentBuildNumber}`,
+      `remote version: ${version}`,
+      `remote project version: ${project_version}`,
+    ].join('\n');
+    dialog.showMessageBoxSync({
+      message,
+    });
   });
   electronUpdator.on(EventType.UPDATE_NOT_AVAILABLE, (...args) => {
-    console.log('updator >> %s, args: %j', EventType.UPDATE_NOT_AVAILABLE, args);
+    const { version, project_version } = args[0]?.updateInfo || {};
+    const message = [
+      'not available',
+      `local version: ${currentVersion}`,
+      `local project version: ${currentBuildNumber}`,
+      `remote version: ${version}`,
+      `remote project version: ${project_version}`,
+    ].join('\n');
+    dialog.showMessageBoxSync({
+      message,
+    });
   });
   electronUpdator.on(EventType.ERROR, (...args) => {
     console.log('updator >> %s, args: %j', EventType.ERROR, args);
   });
   electronUpdator.on(EventType.UPDATE_DOWNLOAD_PROGRESS, (...args) => {
-    console.log('updator >> %s, args: %j', EventType.UPDATE_DOWNLOAD_PROGRESS, args);
+    const data = args[0];
+    console.log('updator >> %s, status: %s', EventType.UPDATE_DOWNLOAD_PROGRESS, data.status);
+    if(data.status === 'downloading'){
+      const progress = args[0].progress;
+      console.log('updator >> %s, progress: %d', EventType.UPDATE_DOWNLOAD_PROGRESS, progress);
+    }
   });
   app.electronUpdator = electronUpdator;
 
   ipcMain.on('updator:checkForUpdates:available', () => {
-    feedUrlTag = 'asar1';
-    app.electronUpdator.checkForUpdates('auto');
+    app.electronUpdator.setFeedUrl(getFeedUrl('asar1'));
+    app.electronUpdator.checkForUpdates();
   });
 
   ipcMain.on('updator:checkForUpdates:notAvailable', () => {
-    feedUrlTag = 'asar2';
-    app.electronUpdator.checkForUpdates('auto');
+    app.electronUpdator.setFeedUrl(getFeedUrl('asar2'));
+    app.electronUpdator.checkForUpdates();
   });
 
   ipcMain.on('updator:downloadUpdate', () => {
