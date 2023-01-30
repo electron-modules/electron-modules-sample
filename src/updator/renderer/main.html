@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Electron Modules Sample</title>
   <style>
     ::-webkit-scrollbar {
       display: none;
@@ -47,17 +46,22 @@
 </head>
 <body>
   <div class="wrapper">
-    <h2>Electron Modules</h2>
-    <a href="https://github.com/electron-modules" target="_blank">
-      https://github.com/electron-modules
-    </a>
-    <hr />
     <ol>
-      <li data-action="electrom">🐛 Electrom</li>
-      <li data-action="electron-windows">🚀 Electron Windows</li>
-      <li data-action="electron-updator">⭐️ Electron Updator</li>
-      <li data-action="electron-webview-schedule">📚 Electron Webview Schedule</li>
-    <ol>
+      <li>
+        checkForUpdates
+        <button id="checkForUpdates_available">available</button>
+        <button id="checkForUpdates_notAvailable">notAvailable</button>
+      </li>
+      <li>
+        downloadUpdate
+        <button id="downloadUpdate">downloadUpdate</button>
+        progress: <span id="progress">0</span>
+      </li>
+      <li>
+        quitAndInstall
+        <button id="quitAndInstall">quitAndInstall</button>
+      </li>
+    </ol>
   </div>
   <script src="./main.js"></script>
 </body>
