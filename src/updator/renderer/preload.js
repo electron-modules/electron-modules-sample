@@ -11,6 +11,10 @@ contextBridge.exposeInMainWorld(
     send: (channel, args) => {
       ipcRenderer.send(channel, args);
     },
+    invoke: ipcRenderer.invoke,
+    on: (channel, listener) => {
+      ipcRenderer.on(channel, listener);
+    },
     desktopCapturer,
   },
 );

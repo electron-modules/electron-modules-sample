@@ -3,7 +3,7 @@
 import url from 'url';
 import path from 'path';
 import semver from 'semver';
-import { ipcMain, dialog } from 'electron';
+import { ipcMain, dialog, ipcRenderer } from 'electron';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
 
@@ -51,8 +51,8 @@ module.exports = (app: any) => {
   electronUpdator.on(EventType.CHECKING_FOR_UPDATE, (...args) => {
     console.log('updator >> %s, args: %j', EventType.CHECKING_FOR_UPDATE, args);
   });
-  electronUpdator.on(EventType.UPDATE_AVAILABLE, (...args) => {
-    const { version, project_version } = args[0]?.updateInfo || {};
+  electronUpdator.on(EventType.UPDATE_AVAILABLE, (data) => {
+    const { version, project_version } = data?.updateInfo || {};
     const message = [
       'available',
       `local version: ${currentVersion}`,
@@ -64,8 +64,8 @@ module.exports = (app: any) => {
       message,
     });
   });
-  electronUpdator.on(EventType.UPDATE_NOT_AVAILABLE, (...args) => {
-    const { version, project_version } = args[0]?.updateInfo || {};
+  electronUpdator.on(EventType.UPDATE_NOT_AVAILABLE, (data) => {
+    const { version, project_version } = data?.updateInfo || {};
     const message = [
       'not available',
       `local version: ${currentVersion}`,
@@ -80,13 +80,10 @@ module.exports = (app: any) => {
   electronUpdator.on(EventType.ERROR, (...args) => {
     console.log('updator >> %s, args: %j', EventType.ERROR, args);
   });
-  electronUpdator.on(EventType.UPDATE_DOWNLOAD_PROGRESS, (...args) => {
-    const data = args[0];
-    console.log('updator >> %s, status: %s', EventType.UPDATE_DOWNLOAD_PROGRESS, data.status);
-    if(data.status === 'downloading'){
-      const progress = args[0].progress;
-      console.log('updator >> %s, progress: %d', EventType.UPDATE_DOWNLOAD_PROGRESS, progress);
-    }
+  electronUpdator.on(EventType.UPDATE_DOWNLOAD_PROGRESS, (data) => {
+    const { status, progress } = data;
+    console.log('updator >> %s, status: %s, progress: %d', EventType.UPDATE_DOWNLOAD_PROGRESS, status, progress);
+    app.windowManager.get('updator').webContents.send('updator:updateDownloadProgress', { status, progress });
   });
   app.electronUpdator = electronUpdator;
 
