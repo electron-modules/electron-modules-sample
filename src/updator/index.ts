@@ -3,6 +3,7 @@
 import url from 'url';
 import path from 'path';
 import semver from 'semver';
+import { ipcMain } from 'electron';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
 
@@ -29,6 +30,7 @@ module.exports = (app: any) => {
       return res;
     },
     needUpdate: (res) => {
+      console.log(res.version, currentVersion, semver.lt(res.version, currentVersion), res.project_version, currentBuildNumber)
       return semver.lt(res.version, currentVersion)
         || res.project_version <= currentBuildNumber;
     },
@@ -55,6 +57,10 @@ module.exports = (app: any) => {
     console.log('updator >> %s, args: %j', EventType.UPDATE_DOWNLOAD_PROGRESS, args);
   });
   app.electronUpdator = electronUpdator;
+
+  ipcMain.on('updator:checkForUpdates', () => {
+    app.electronUpdator.checkForUpdates();
+  });
 
   const mainUrl = url.format({
     pathname: path.join(__dirname, 'renderer', 'main.html'),
