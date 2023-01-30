@@ -3,7 +3,7 @@
 import url from 'url';
 import path from 'path';
 import semver from 'semver';
-import { ipcMain } from 'electron';
+import { ipcMain, dialog } from 'electron';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
 
@@ -11,13 +11,19 @@ console.log('version: %s', ElectronUpdatorVersion);
 
 const { MacUpdator, EventType } = ElectronUpdator;
 
+let feedUrlTag = 'asar1';
+const feedUrlsMap = {
+  asar1: 'http://localhost:8888/fixtures/data/asar1.json',
+  asar2: 'http://localhost:8888/fixtures/data/asar2.json',
+  package1: 'http://localhost:8888/fixtures/data/package1.json'
+};
 // npm run ss
 function getFeedUrl() {
-  return 'http://localhost:8888/fixtures/data/asar1.json';
+  return feedUrlsMap[feedUrlTag];
 }
 
-const currentVersion = '0.0.1';
-const currentBuildNumber = 100;
+const currentVersion = '0.0.2';
+const currentBuildNumber = 2;
 
 module.exports = (app: any) => {
   // 1. 构造 options
@@ -60,7 +66,13 @@ module.exports = (app: any) => {
   });
   app.electronUpdator = electronUpdator;
 
-  ipcMain.on('updator:checkForUpdates', () => {
+  ipcMain.on('updator:checkForUpdates:available', () => {
+    feedUrlTag = 'asar1';
+    app.electronUpdator.checkForUpdates('auto');
+  });
+
+  ipcMain.on('updator:checkForUpdates:notAavailable', () => {
+    feedUrlTag = 'asar2';
     app.electronUpdator.checkForUpdates('auto');
   });
 
@@ -87,6 +99,8 @@ module.exports = (app: any) => {
       url: loadingUrl,
     },
     browserWindow: {
+      width: 600,
+      height: 480,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: true,

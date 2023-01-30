@@ -56,7 +56,7 @@
     "translate": "easy-i18n-cli -c ./i18n.config.js",
     "translate:check": "npm run translate -- --check",
     "contributor": "git-contributor",
-    "ss": "startserver -p 8888"
+    "ss": "python3 -m http.server 8888"
   },
   "husky": {
     "hooks": {
