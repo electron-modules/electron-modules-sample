@@ -26,13 +26,15 @@ module.exports = (app: any) => {
     logger: console, // logger
     productName: 'demo',
     responseFormatter: (res) => {
-      console.log('updator >> responseFormatter', res);
       return res;
     },
     needUpdate: (res) => {
-      console.log(res.version, currentVersion, semver.lt(res.version, currentVersion), res.project_version, currentBuildNumber)
-      return semver.lt(res.version, currentVersion)
-        || res.project_version <= currentBuildNumber;
+      console.log('local version', currentVersion);
+      console.log('local project version', currentBuildNumber);
+      console.log('remote version', res.version);
+      console.log('remote project version', res.project_version);
+      return semver.gt(res.version, currentVersion)
+        || res.project_version > currentBuildNumber;
     },
   };
   // 2. 初始化 updator 实例
@@ -59,7 +61,15 @@ module.exports = (app: any) => {
   app.electronUpdator = electronUpdator;
 
   ipcMain.on('updator:checkForUpdates', () => {
-    app.electronUpdator.checkForUpdates();
+    app.electronUpdator.checkForUpdates('auto');
+  });
+
+  ipcMain.on('updator:downloadUpdate', () => {
+    app.electronUpdator.downloadUpdate();
+  });
+
+  ipcMain.on('updator:quitAndInstall', () => {
+    app.electronUpdator.quitAndInstall();
   });
 
   const mainUrl = url.format({
