@@ -71,7 +71,7 @@ module.exports = (app: any) => {
     app.electronUpdator.checkForUpdates('auto');
   });
 
-  ipcMain.on('updator:checkForUpdates:notAavailable', () => {
+  ipcMain.on('updator:checkForUpdates:notAvailable', () => {
     feedUrlTag = 'asar2';
     app.electronUpdator.checkForUpdates('auto');
   });
