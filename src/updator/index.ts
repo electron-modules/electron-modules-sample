@@ -3,7 +3,7 @@
 import url from 'url';
 import path from 'path';
 import semver from 'semver';
-import { ipcMain, dialog, ipcRenderer } from 'electron';
+import { ipcMain, dialog } from 'electron';
 import ElectronUpdator from 'electron-updator';
 import { version as ElectronUpdatorVersion } from 'electron-updator/package';
 
@@ -16,7 +16,7 @@ function getFeedUrl(feedUrlTag = 'asar1') {
   const feedUrlsMap = {
     asar1: 'http://localhost:8888/fixtures/data/asar1.json',
     asar2: 'http://localhost:8888/fixtures/data/asar2.json',
-    package1: 'http://localhost:8888/fixtures/data/package1.json'
+    package1: 'http://localhost:8888/fixtures/data/package1.json',
   };
   return feedUrlsMap[feedUrlTag];
 }
@@ -30,16 +30,16 @@ module.exports = (app: any) => {
     url: getFeedUrl(),
     logger: console, // logger
     productName: 'demo',
-    responseFormatter: (res) => {
+    updateInfoFormatter: (res) => {
       return res;
     },
-    needUpdate: (res) => {
+    ifNeedUpdate: (res) => {
       console.log('local version', currentVersion);
       console.log('local project version', currentBuildNumber);
       console.log('remote version', res.version);
       console.log('remote project version', res.project_version);
-      return semver.gt(res.version, currentVersion)
-        || res.project_version > currentBuildNumber;
+      return semver.gt(res.version, currentVersion) ||
+        res.project_version > currentBuildNumber;
     },
   };
   // 2. 初始化 updator 实例

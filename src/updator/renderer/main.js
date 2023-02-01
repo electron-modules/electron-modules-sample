@@ -16,6 +16,6 @@ document.querySelector('#quitAndInstall').addEventListener('click', () => {
   window._electron_bridge.send('updator:quitAndInstall');
 }, false);
 
-window._electron_bridge.on('updator:updateDownloadProgress', (data) => {
+window._electron_bridge.on('updator:updateDownloadProgress', (_, data) => {
   document.querySelector('#progress').innerHTML = JSON.stringify(data, null, 2);
 });
