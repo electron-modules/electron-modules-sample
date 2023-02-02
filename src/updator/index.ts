@@ -4,8 +4,8 @@ import url from 'url';
 import path from 'path';
 import semver from 'semver';
 import { ipcMain, dialog } from 'electron';
-import ElectronUpdator from 'electron-updator';
-import { version as ElectronUpdatorVersion } from 'electron-updator/package';
+import ElectronUpdator from 'graceful-electron-updater';
+import { version as ElectronUpdatorVersion } from 'graceful-electron-updater/package';
 
 console.log('version: %s', ElectronUpdatorVersion);
 
