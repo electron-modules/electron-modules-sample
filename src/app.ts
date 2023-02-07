@@ -16,6 +16,8 @@ export default class App {
         require('./updator')(this);
       } else if (action === 'electron-webview-schedule') {
         require('./webview-schedule')(this);
+      } else if (action === 'electron-windows-titlebar') {
+        require('./windows-titlebar')(this);
       }
     });
   }
