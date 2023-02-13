@@ -22,8 +22,11 @@
     "graceful-updater": "1",
     "lodash": "4",
     "moment": "^2.29.4",
-    "network-interface": "18",
     "semver": "^7.3.8"
+  },
+  "optionalDependencies": {
+    "network-interface": "18",
+    "windows-verify-trust": "1"
   },
   "devDependencies": {
     "@applint/spec": "^1.2.3",

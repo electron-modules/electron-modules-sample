@@ -1,10 +1,10 @@
 'use strict';
 
-const url = require('url');
-const path = require('path');
-const _ = require('lodash');
-const { ipcMain } = require('electron');
-const windowTitleBar = require('electron-windows-titlebar');
+import url from 'url';
+import path from 'path';
+import _  from 'lodash';
+import { ipcMain } from 'electron';
+import windowTitleBar from 'electron-windows-titlebar';
 
 module.exports = (app: any) => {
   const windowUrl = url.format({

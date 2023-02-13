@@ -6,7 +6,7 @@ const nodemon = require('gulp-nodemon');
 function startElectron(done) {
   const stream = nodemon({
     script: path.resolve(__dirname, 'launcher.js'),
-    ext: 'ts js json',
+    ext: 'ts js json html',
     ignore: [],
     watch: [
       'src',

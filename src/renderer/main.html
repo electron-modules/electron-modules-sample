@@ -10,19 +10,19 @@
     }
     html,
     body {
-      background-color: white;
       width: 100%;
       height: 100%;
       margin: 0;
       padding: 0;
+      overflow: hidden;
     }
     hr {
-      margin: 12px 0;
+      margin: 8px 0;
       border: none;
       height: 1px;
       background-color: #ebebeb;
     }
-    h2, ol {
+    h3, ol {
       margin: 0;
       padding: 0;
     }
@@ -30,7 +30,7 @@
       padding-left: 20px;
     }
     li {
-      margin: 16px 0;
+      margin: 8px 0;
       padding: 4px;
       cursor: pointer;
       background-color: aliceblue;
@@ -43,11 +43,15 @@
     .wrapper {
       padding: 12px;
     }
+    .wrapper a {
+      font-size: 14px;
+      margin: 4px 0;
+    }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <h2>Electron Modules</h2>
+    <h3>Electron Modules</h3>
     <a href="https://github.com/electron-modules" target="_blank">
       https://github.com/electron-modules
     </a>
@@ -59,6 +63,7 @@
       <li data-action="electron-webview-schedule">📚 Electron Webview Schedule</li>
       <li data-action="electron-windows-titlebar">🌓 Electron Windows Titlebar</li>
       <li data-action="network-interface">💻 Network Interface</li>
+      <li data-action="windows-verify-trust">🛡 Windows Verify Trust</li>
     <ol>
   </div>
   <script src="./main.js"></script>
