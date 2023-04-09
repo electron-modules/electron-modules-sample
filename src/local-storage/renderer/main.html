@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="#" />
+    <title>Storage Benchmarks</title>
+    <script src="../../../node_modules/dexie/dist/dexie.js"></script>
+    <script src="../../../node_modules/monitor.js/build/monitor.js"></script>
+    <script src="./indexeddb-helper.js"></script>
+    <link rel="stylesheet" href="./main.css" />
+    </style>
+  </head>
+  <body>
+    <div id="perf-board"></div>
+    <div id="wrapper">
+      <div class="content">
+        <div class="content-item">
+          <div class="switch">
+            <form>
+              <fieldset>
+                <legend>IndexedDB</legend>
+                <div>
+                  <input
+                    type="radio"
+                    id="db1-1"
+                    name="IndexedDB"
+                    value="Default"
+                    checked
+                  />
+                  <label for="db1-1">
+                    IndexedDB
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db1-2"
+                    name="IndexedDB"
+                    value="DefaultWebWorker"
+                  />
+                  <label for="db1-2">
+                    IndexedDB WebWorker
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db1-3"
+                    name="IndexedDB"
+                    value="Dexie"
+                  />
+                  <label for="db1-3">Dexie.js</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db1-4"
+                    name="IndexedDB"
+                    value="DexieWebWorker"
+                  />
+                  <label for="db1-4">Dexie.js WebWorker</label>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <pre id="IndexedDBLogs" class="logs"></pre>
+          <div>
+            <button data-type="IndexedDB">Execute!</button>
+          </div>
+        </div>
+        <div class="content-item">
+          <div class="switch">
+            <form>
+              <fieldset>
+                <legend>SQLite</legend>
+                <div>
+                  <input
+                    type="radio"
+                    id="db2-1"
+                    name="SQLite"
+                    value="ElectronNative"
+                    checked
+                  />
+                  <label for="db2-1">Electron Native</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db2-2"
+                    name="SQLite"
+                    value="ElectronIPC"
+                  />
+                  <label for="db2-2">Electron IPC</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db2-3"
+                    name="SQLite"
+                    value="WebAssembly"
+                    disabled
+                  />
+                  <label for="db2-3">WIP: WebAssembly</label>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <pre id="SQLiteLogs" class="logs"></pre>
+          <div>
+            <button data-type="SQLite">Execute!</button>
+          </div>
+        </div>
+      </div>
+      <div id="others">
+        <ul>
+          <li>
+            <a href="https://github.com/dexie/Dexie.js" target="_blank">
+              https://github.com/dexie/Dexie.js
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/sql-js/sql.js" target="_blank">
+              https://github.com/sql-js/sql.js
+            </a>
+          </li>
+          <li>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API" target="_blank">
+              https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>

@@ -14,7 +14,7 @@
     "@electron/remote": "2",
     "detect-port": "1",
     "electrom": "19",
-    "electron": "22",
+    "electron": "19",
     "electron-json-storage-alt": "18",
     "electron-webview-schedule": "18",
     "electron-windows": "18",
@@ -26,12 +26,17 @@
     "semver": "^7.3.8",
     "windows-verify-trust": "1"
   },
+  "optionalDependencies": {
+    "@journeyapps/sqlcipher": "^5.3.1"
+  },
   "devDependencies": {
     "@applint/spec": "^1.2.3",
     "@electron/asar": "3",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.181",
+    "@types/node": "^18.15.11",
     "cross-env": "^7.0.3",
+    "dexie": "^3.2.3",
     "easy-i18n-cli": "1",
     "electron-installer-dmg": "^4.0.0",
     "eslint": "7",
@@ -42,6 +47,7 @@
     "gulp-nodemon": "^2.5.0",
     "husky": "*",
     "mocha": "*",
+    "monitor.js": "^2.0.1",
     "nyc": "^15.1.0",
     "startserver": "1",
     "ts-jest": "^26.5.6",

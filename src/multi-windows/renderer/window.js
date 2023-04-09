@@ -23,3 +23,14 @@ document.querySelector('#write').addEventListener('click', () => {
 document.querySelector('#debug').addEventListener('click', () => {
   window._electron_bridge.send('open-devtools');
 }, false);
+
+document.addEventListener('click', e => {
+  const { target } = e;
+  if (target.nodeName === 'A') {
+    if (e.defaultPrevented) return;
+    if (target.href) {
+      e.preventDefault();
+      window._electron_bridge.ipcRenderer.send('openExternal', target.href);
+    }
+  }
+}, false);
