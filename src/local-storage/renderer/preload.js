@@ -1,13 +1,9 @@
 'use strict';
 
-const {
-  ipcRenderer,
-  desktopCapturer, contextBridge,
-} = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('_electron_bridge', {
   ipcRenderer: {
     send: (channel, ...args) => ipcRenderer.send(channel, ...args),
   },
-  desktopCapturer,
 });
