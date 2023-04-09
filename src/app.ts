@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from 'electron';
+import { ipcMain, dialog, shell } from 'electron';
 
 export default class App {
   init() {
@@ -13,6 +13,9 @@ export default class App {
 
   bindIPC() {
     const { isWin } = this;
+    ipcMain.on('openExternal', (_, data) => {
+      shell.openExternal(data);
+    });
     ipcMain.on('start-action', (_, action) => {
       if (action === 'electrom') {
         require('./electrom')(this);
@@ -40,6 +43,8 @@ export default class App {
           return;
         }
         this.alertWindows();
+      } else if (action === 'local-storage') {
+        require('./local-storage')(this);
       }
     });
   }

@@ -13,7 +13,7 @@ function startElectron(done) {
       'package.json',
     ],
     done,
-    delay: '2500',
+    delay: '5000',
   });
   stream
     .on('restart', files => {
