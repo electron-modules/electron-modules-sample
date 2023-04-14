@@ -4,6 +4,11 @@ const url = require('url');
 const path = require('path');
 require('@electron/remote/main').initialize();
 
+function initSQLCipher() {
+  const sqlite3 = require('@journeyapps/sqlcipher').verbose();
+  console.log(sqlite3);
+}
+
 module.exports = (app) => {
   const mainUrl = url.format({
     pathname: path.join(__dirname, 'renderer', 'main.html'),
@@ -38,4 +43,5 @@ module.exports = (app) => {
     openDevTools: true,
   });
   window.loadURL(mainUrl);
+  initSQLCipher();
 };

@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+}
+
+#perf-board {
+  position: relative;
+  width: 204px;
+  right: calc(216px - 100vw);
+}
+
+#wrapper {
+  margin: 0 auto;
+  width: 80%;
+  margin-top: 80px;
+}
+
+.content {
+  display: flex;
+  border: 1px solid gray;
+  padding: 8px;
+}
+
+.content-item {
+  flex: 1;
+}

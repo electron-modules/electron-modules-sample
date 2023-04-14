@@ -3,31 +3,100 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoSQL Storage</title>
-    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
-    <style>
-      .buttons {
-        margin-top: 16px;
-      }
-      #consoleArea {
-        width: 600px;
-        height: 600px;
-        margin-top: 16px;
-      }
-      #consoleArea textarea {
-        width: 100%;
-        height: 100%;
-      }
+    <title>Storage Benchmarks</title>
+    <script src="../../../node_modules/dexie/dist/dexie.js"></script>
+    <script src="../../../node_modules/monitor.js/build/monitor.js"></script>
+    <link rel="stylesheet" href="./main.css" />
     </style>
   </head>
   <body>
-    <a href="https://github.com/dexie/Dexie.js" target="_blank">
-      https://github.com/dexie/Dexie.js
-    </a>
-    <div class="buttons">
-      <button id="add-database">Add database</button>
+    <div id="perf-board"></div>
+    <div id="wrapper">
+      <div class="content">
+        <div class="content-item">
+          <div class="control">
+            <fieldset>
+              <legend>IndexedDB, select type:</legend>
+              <div>
+                <input
+                  type="radio"
+                  id="IndexedDB"
+                  name="IndexedDB"
+                  value="IndexedDB"
+                  checked
+                />
+                <label for="IndexedDB">IndexedDB</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="Dexie"
+                  name="IndexedDB"
+                  value="Dexie"
+                  checked
+                />
+                <label for="Dexie">Dexie.js(IndexedDB)</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="Dexie"
+                  name="IndexedDB"
+                  value="Dexie"
+                  checked
+                />
+                <label for="Dexie">Dexie.js(IndexedDB) ServiceWorker</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="content-item">
+          <div class="control">
+            <fieldset>
+              <legend>SQLite, select type:</legend>
+              <div>
+                <input
+                  type="radio"
+                  id="IndexedDB"
+                  name="SQLite"
+                  value="IndexedDB"
+                  checked
+                />
+                <label for="IndexedDB">Electron Native</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="Dexie"
+                  name="SQLite"
+                  value="Dexie"
+                  checked
+                />
+                <label for="Dexie">Electron IPC</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="Dexie"
+                  name="SQLite"
+                  value="Dexie"
+                  checked
+                />
+                <label for="Dexie">wsam</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button>Execute!</button>
+      </div>
+      <div>
+        <a href="https://github.com/dexie/Dexie.js" target="_blank">
+          https://github.com/dexie/Dexie.js
+        </a>
+      </div>
     </div>
-    <div id="consoleArea"></div>
     <script src="./main.js"></script>
   </body>
 </html>

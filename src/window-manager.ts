@@ -22,8 +22,8 @@ module.exports = (app) => {
       url: loadingUrl,
     },
     browserWindow: {
-      width: 580,
-      height: 420,
+      width: 600,
+      height: 500,
       webPreferences: {
         enableRemoteModule: false,
         nodeIntegration: false,
