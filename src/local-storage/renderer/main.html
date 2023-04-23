@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="#" />
     <title>Storage Benchmarks</title>
-    <script src="../../../node_modules/dexie/dist/dexie.js"></script>
-    <script src="../../../node_modules/monitor.js/build/monitor.js"></script>
-    <script src="./indexeddb-helper.js"></script>
     <link rel="stylesheet" href="./main.css" />
     </style>
   </head>
@@ -61,6 +58,15 @@
                   />
                   <label for="db1-4">Dexie.js WebWorker</label>
                 </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db1-5"
+                    name="IndexedDB"
+                    value="LoveField"
+                  />
+                  <label for="db1-5">LoveField</label>
+                </div>        
               </fieldset>
             </form>
           </div>
@@ -98,10 +104,18 @@
                     type="radio"
                     id="db2-3"
                     name="SQLite"
-                    value="WebAssembly"
-                    disabled
+                    value="WASM"
                   />
-                  <label for="db2-3">WIP: WebAssembly</label>
+                  <label for="db2-3">sql.js with wasm</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="db2-4"
+                    name="SQLite"
+                    value="WASMInWorker"
+                  />
+                  <label for="db2-4">sql.js with wasm in worker</label>
                 </div>
               </fieldset>
             </form>
@@ -132,6 +146,12 @@
         </ul>
       </div>
     </div>
+
+    <script src="../../../node_modules/dexie/dist/dexie.js"></script>
+    <script src="../../../node_modules/lovefield/dist/lovefield.js"></script>
+    <script src="../../../node_modules/sql.js/dist/sql-wasm.js"></script>
+    <script src="../../../node_modules/monitor.js/build/monitor.js"></script>
+    <script src="./indexeddb-helper.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>

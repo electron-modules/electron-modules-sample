@@ -59,6 +59,7 @@ window.indexedDBHelper = {
   },
   addBatchTestData: (objectStore, count = 1000) => {
     return new Promise((resolve, reject) => {
+      console.time('addBatchTestData');
       for (let i = 1; i <= count; i++) {
         const data = {
           index1: `index_${i}`,
@@ -74,6 +75,7 @@ window.indexedDBHelper = {
       }
       objectStore.transaction.oncomplete = () => {
         console.log('Transaction completed');
+        console.timeEnd('addBatchTestData');
         resolve(true);
       };
       objectStore.transaction.onerror = (event) => {
