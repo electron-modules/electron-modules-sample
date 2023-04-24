@@ -48,6 +48,7 @@
     "git-contributor": "*",
     "gulp": "^4.0.2",
     "gulp-nodemon": "^2.5.0",
+    "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
     "mocha": "*",
     "monitor.js": "^2.0.1",
