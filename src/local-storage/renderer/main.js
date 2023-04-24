@@ -1,5 +1,7 @@
 'use strict';
 
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
+
 class MainApp {
   constructor() {
     this.perfboardElemContainer = document.querySelector('#perf-board');
@@ -7,7 +9,7 @@ class MainApp {
     this.IndexedDBLogsContainer = document.querySelector('#IndexedDBLogs');
     this.runOptions = {
       IndexedDB: 'Default',
-      SQLite: 'ElectronNative',
+      SQLite: 'ElectronNativeInRenderer',
     };
     this.logs = {
       IndexedDB: [],
@@ -227,20 +229,42 @@ class MainApp {
     const { count } = this.runnerConfig;
     const startTime = Date.now();
     this.log(type, `start time: ${startTime}, count: ${count}`);
-    await window._electron_bridge.connectSql();
-    await window._electron_bridge.runSql('DROP TABLE IF EXISTS todo_electron_native;');
-    await window._electron_bridge.runSql('CREATE TABLE todo_electron_native (id int, description varchar);');
+    await window._electron_bridge.sqlConnect();
+    await window._electron_bridge.sqlExec(
+      'run',
+      'DROP TABLE IF EXISTS todo_electron_native;',
+    );
+    await window._electron_bridge.sqlExec(
+      'run',
+      'CREATE TABLE todo_electron_native (id int, description varchar);',
+    );
 
     for (let i = 0; i < count; i++) {
-      await window._electron_bridge.runSql(
+      await window._electron_bridge.sqlExec(
+        'run',
         'INSERT INTO todo_electron_native VALUES (?,?)',
         [i, new Array(100).fill('测试').join('')],
       );
       console.log('Data added successfully');
     }
+
+    // 轮训等待写入完成
+    let cnt;
+    while (cnt !== count) {
+      const res = await window._electron_bridge.sqlExec(
+        'get',
+        'SELECT count(*) as cnt FROM todo_electron_native',
+      );
+      if (res.cnt === count) {
+        break;
+      } else {
+        await sleep(50);
+      }
+    }
+
     const endTime = Date.now();
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
-    await window._electron_bridge.closeSql();
+    await window._electron_bridge.sqlClose();
   }
 
   async runSQLiteElectronIPCToMain(type) {
@@ -277,6 +301,15 @@ class MainApp {
 
       console.log('Data added successfully');
     }
+    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+      id: `select_${i}`,
+      action: 'exec',
+      sqlArgs: [
+        'SELECT * FROM todo_electron_ipc where id = ?',
+        [count],
+      ],
+    });
+
     const endTime = Date.now();
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
     await window._electron_bridge.ipcRenderer.send('sqlite:operate', {

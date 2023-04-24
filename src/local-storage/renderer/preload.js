@@ -14,23 +14,34 @@ function initDB(dbFilePath) {
 contextBridge.exposeInMainWorld('_electron_bridge', {
   ipcRenderer: {
     send: (channel, ...args) => ipcRenderer.send(channel, ...args),
+    on: (channel, ...args) => ipcRenderer.on(channel, ...args),
   },
   // browserWin -> renderer 进程执行 sqlite 操作
-  runSql: async (...args) => {
-    if (dbInstance) {
-      dbInstance.serialize(() => {
-        dbInstance.run(...args);
-      });
-    }
-    return 'ok';
+  sqlExec: async (operator, ...args) => {
+    // 转为 Promise
+    return new Promise((resolve, reject) => {
+      if (dbInstance) {
+        dbInstance.serialize(() => {
+          dbInstance[operator](...args, (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            // 确保写入后再 resolve
+            resolve(result);
+          });
+        });
+      } else {
+        reject('dbInstance is not existed');
+      }
+    });
   },
-  connectSql: async () => {
+  sqlConnect: async () => {
     // 初始化
     dbInstance = initDB('./src/local-storage/sqlite/test-renderer.db');
 
     return 'ok';
   },
-  closeSql: async () => {
+  sqlClose: async () => {
     dbInstance?.close();
     return 'ok';
   },

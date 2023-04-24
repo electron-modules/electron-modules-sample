@@ -68,7 +68,9 @@ module.exports = (app: any) => {
     if (action === 'exec') {
       if (dbInstance) {
         dbInstance.serialize(() => {
-          dbInstance.run(...sqlArgs);
+          dbInstance.run(...sqlArgs, (err: Error, row: any) => {
+            // console.log(row.id + ": " + row.info);
+          });
         });
       }
     }

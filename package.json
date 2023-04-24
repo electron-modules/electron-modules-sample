@@ -48,7 +48,6 @@
     "git-contributor": "*",
     "gulp": "^4.0.2",
     "gulp-nodemon": "^2.5.0",
-    "husky": "*",
     "mocha": "*",
     "monitor.js": "^2.0.1",
     "nyc": "^15.1.0",
@@ -67,12 +66,8 @@
     "translate": "easy-i18n-cli -c ./i18n.config.js",
     "translate:check": "npm run translate -- --check",
     "contributor": "git-contributor",
-    "ss": "python3 -m http.server 8888"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm run reset:db"
-    }
+    "ss": "python3 -m http.server 8888",
+    "prepare": "husky install"
   },
   "license": "MIT"
 }
