@@ -110,6 +110,111 @@ class MainApp {
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
   }
 
+  async runIndexedDBLoveField(type) {
+    await window.indexedDBHelper.deleteAllIndexedDB();
+
+    const schemaBuilder = lf.schema.create('todo', 1);
+    schemaBuilder.createTable('Item')
+      .addColumn('id', lf.Type.INTEGER)
+      .addColumn('description', lf.Type.STRING)
+      .addPrimaryKey(['id']);
+
+    const db = await schemaBuilder.connect();
+    db.getSchema().table('Item');
+
+    const { count } = this.runnerConfig;
+    const startTime = Date.now();
+    this.log(type, `start time: ${startTime}, count: ${count}`);
+    for (let i = 0; i < count; i++) {
+      const item = db.getSchema().table('Item');
+      const row = item.createRow({
+        id: i,
+        description: new Array(100).fill('测试').join(''),
+      });
+
+      await db.insertOrReplace().into(item).values([row]).exec();
+
+      console.log('Data added successfully');
+    }
+    const endTime = Date.now();
+    this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
+  }
+
+  async runSQLiteWASM(type) {
+    const SQL = await initSqlJs({
+      // Required to load the wasm binary asynchronously. Of course, you can host it wherever you want
+      // You can omit locateFile completely when running in node
+      locateFile: () => '../../../node_modules/sql.js/dist/sql-wasm.wasm',
+    });
+
+    const db = new SQL.Database();
+    db.run('DROP TABLE IF EXISTS todo');
+    db.run('CREATE TABLE todo (id int, description varchar);');
+
+    const { count } = this.runnerConfig;
+    const startTime = Date.now();
+    this.log(type, `start time: ${startTime}, count: ${count}`);
+    for (let i = 0; i < count; i++) {
+      db.run('INSERT INTO todo VALUES (?,?)', [i, new Array(100).fill('测试').join('')]);
+      console.log('Data added successfully');
+    }
+    const endTime = Date.now();
+    this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
+  }
+
+  async runSQLiteWASMInWorker(type) {
+    const worker = new Worker('../../../node_modules/sql.js/dist/worker.sql-wasm.js');
+
+    worker.onmessage = () => {
+      console.log('Database opened');
+      worker.onmessage = event => {
+        console.log('Data added successfully');
+        if (event.data?.id === 'end') {
+          const endTime = Date.now();
+          this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
+        }
+      };
+
+      worker.postMessage({
+        id: 'drop',
+        action: 'exec',
+        sql: 'DROP TABLE IF EXISTS todo_worker',
+      });
+
+      // create table
+      worker.postMessage({
+        id: 'init',
+        action: 'exec',
+        sql: 'CREATE TABLE todo_worker (id int, description varchar);',
+      });
+
+      const { count } = this.runnerConfig;
+      const startTime = Date.now();
+      this.log(type, `start time: ${startTime}, count: ${count}`);
+      for (let i = 0; i < count; i++) {
+        worker.postMessage({
+          id: i,
+          action: 'exec',
+          sql: 'INSERT INTO todo_worker VALUES ($id, $description)',
+          params: { $id: i, $description: new Array(100).fill('测试').join('') },
+        });
+      }
+
+      // 以 count 结束
+      worker.postMessage({
+        id: 'end',
+        action: 'exec',
+        sql: 'select count(*) from todo_worker',
+      });
+    };
+
+    worker.onerror = e => console.log('Worker error: ', e);
+    worker.postMessage({
+      id: 'open',
+      action: 'open',
+    });
+  }
+
   async runSQLiteElectronNative(type) {
     const { count } = this.runnerConfig;
     const startTime = Date.now();
