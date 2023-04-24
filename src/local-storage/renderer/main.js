@@ -141,14 +141,17 @@ class MainApp {
   }
 
   async runSQLiteWASM(type) {
-    const SQL = await initSqlJs({
+    const sqlPromise = initSqlJs({
       // Required to load the wasm binary asynchronously. Of course, you can host it wherever you want
       // You can omit locateFile completely when running in node
       locateFile: () => '../../../node_modules/sql.js/dist/sql-wasm.wasm',
     });
 
-    const db = new SQL.Database();
-    db.run('DROP TABLE IF EXISTS todo');
+    const dataPromise = fetch('../../../test.sqlite').then(res => res.arrayBuffer());
+    const [SQL, buf] = await Promise.all([sqlPromise, dataPromise]);
+    const db = new SQL.Database(new Uint8Array(buf));
+
+    db.run('DROP TABLE IF EXISTS todo;');
     db.run('CREATE TABLE todo (id int, description varchar);');
 
     const { count } = this.runnerConfig;
@@ -178,7 +181,7 @@ class MainApp {
       worker.postMessage({
         id: 'drop',
         action: 'exec',
-        sql: 'DROP TABLE IF EXISTS todo_worker',
+        sql: 'DROP TABLE IF EXISTS todo_worker;',
       });
 
       // create table
@@ -209,25 +212,77 @@ class MainApp {
     };
 
     worker.onerror = e => console.log('Worker error: ', e);
+
+    const buf = await fetch('../../../test.sqlite')
+      .then(res => res.arrayBuffer());
+
     worker.postMessage({
       id: 'open',
       action: 'open',
+      buffer: buf,
     });
   }
 
-  async runSQLiteElectronNative(type) {
+  async runSQLiteElectronNativeInRenderer(type) {
     const { count } = this.runnerConfig;
     const startTime = Date.now();
     this.log(type, `start time: ${startTime}, count: ${count}`);
+    await window._electron_bridge.connectSql();
+    await window._electron_bridge.runSql('DROP TABLE IF EXISTS todo_electron_native;');
+    await window._electron_bridge.runSql('CREATE TABLE todo_electron_native (id int, description varchar);');
+
     for (let i = 0; i < count; i++) {
-      await window._electron_bridge.addTestData({
-        index1: `index_${i}`,
-        field1: new Array(100).fill('测试').join(''),
-      });
+      await window._electron_bridge.runSql(
+        'INSERT INTO todo_electron_native VALUES (?,?)',
+        [i, new Array(100).fill('测试').join('')],
+      );
       console.log('Data added successfully');
     }
     const endTime = Date.now();
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
+    await window._electron_bridge.closeSql();
+  }
+
+  async runSQLiteElectronIPCToMain(type) {
+    const { count } = this.runnerConfig;
+    const startTime = Date.now();
+    this.log(type, `start time: ${startTime}, count: ${count}`);
+    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+      id: 'connect',
+      action: 'connect',
+    });
+
+    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+      id: 'drop',
+      action: 'exec',
+      sqlArgs: ['DROP TABLE IF EXISTS todo_electron_ipc;'],
+    });
+
+    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+      id: 'init',
+      action: 'exec',
+      sqlArgs: ['CREATE TABLE todo_electron_ipc (id int, description varchar);'],
+    });
+
+    for (let i = 0; i < count; i++) {
+      // 无法确保已经写入成功，只能发送消息成功
+      window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+        id: `insert${i}`,
+        action: 'exec',
+        sqlArgs: [
+          'INSERT INTO todo_electron_ipc VALUES (?,?)',
+          [i, new Array(100).fill('测试').join('')],
+        ],
+      });
+
+      console.log('Data added successfully');
+    }
+    const endTime = Date.now();
+    this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
+    await window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+      id: 'close',
+      action: 'close',
+    });
   }
 
   log(type, content = '') {

@@ -85,19 +85,19 @@
                     type="radio"
                     id="db2-1"
                     name="SQLite"
-                    value="ElectronNative"
+                    value="ElectronNativeInRenderer"
                     checked
                   />
-                  <label for="db2-1">Electron Native</label>
+                  <label for="db2-1">Exec in Electron Renderer Proccess</label>
                 </div>
                 <div>
                   <input
                     type="radio"
                     id="db2-2"
                     name="SQLite"
-                    value="ElectronIPC"
+                    value="ElectronIPCToMain"
                   />
-                  <label for="db2-2">Electron IPC</label>
+                  <label for="db2-2">Exec in Electron Main Proccess</label>
                 </div>
                 <div>
                   <input
@@ -106,7 +106,7 @@
                     name="SQLite"
                     value="WASM"
                   />
-                  <label for="db2-3">sql.js with wasm</label>
+                  <label for="db2-3">Use sql.js</label>
                 </div>
                 <div>
                   <input
@@ -115,7 +115,7 @@
                     name="SQLite"
                     value="WASMInWorker"
                   />
-                  <label for="db2-4">sql.js with wasm in worker</label>
+                  <label for="db2-4">Use sql.js in worker</label>
                 </div>
               </fieldset>
             </form>

@@ -63,6 +63,7 @@
     "dev:watch": "gulp dev-app --watch",
     "test": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . --fix",
+    "reset:db": "sh ./scripts/clean-db.sh",
     "translate": "easy-i18n-cli -c ./i18n.config.js",
     "translate:check": "npm run translate -- --check",
     "contributor": "git-contributor",
@@ -70,7 +71,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "npm run lint && npm run reset:db"
     }
   },
   "license": "MIT"
