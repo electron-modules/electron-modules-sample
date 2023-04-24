@@ -2,7 +2,7 @@
 
 import url from 'url';
 import path from 'path';
-import _  from 'lodash';
+import _ from 'lodash';
 import { ipcMain } from 'electron';
 import windowTitleBar from 'electron-windows-titlebar';
 
