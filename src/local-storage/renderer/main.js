@@ -149,7 +149,7 @@ class MainApp {
       locateFile: () => '../../../node_modules/sql.js/dist/sql-wasm.wasm',
     });
 
-    const dataPromise = fetch('../../../test.sqlite').then(res => res.arrayBuffer());
+    const dataPromise = fetch('../sqlite/test-sql.js.db').then(res => res.arrayBuffer());
     const [SQL, buf] = await Promise.all([sqlPromise, dataPromise]);
     const db = new SQL.Database(new Uint8Array(buf));
 
@@ -165,6 +165,35 @@ class MainApp {
     }
     const endTime = Date.now();
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
+    this._dump(db);
+  }
+
+  _dump(db) {
+    // core dump as file
+    const binaryArray = db.export();
+    // download this binaryArray as a file
+    const blob = new Blob([binaryArray], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.download = 'test-sql.js.db';
+    a.href = url;
+    a.click();
+
+    // const [fileHandle] = await window.showOpenFilePicker({
+    //   types: [
+    //     {
+    //       description: 'sql.js dump file',
+    //       accept: {
+    //         'text/plain': ['.db'],
+    //       },
+    //     },
+    //   ],
+    // });
+    // const writable = await fileHandle.createWritable();
+    // // Write the contents of the file to the stream.
+    // await writable.write(binaryArray);
+    // // Close the file and write the contents to disk.
+    // await writable.close();
   }
 
   async runSQLiteWASMInWorker(type) {
@@ -215,7 +244,7 @@ class MainApp {
 
     worker.onerror = e => console.log('Worker error: ', e);
 
-    const buf = await fetch('../../../test.sqlite')
+    const buf = await fetch('../sqlite/test-sql.js-worker.db')
       .then(res => res.arrayBuffer());
 
     worker.postMessage({
