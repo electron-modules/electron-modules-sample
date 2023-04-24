@@ -57,10 +57,9 @@ module.exports = (app: any) => {
   });
   window.loadURL(mainUrl);
 
-  let logged = false;
   // browserWin -> renderer -> main 进程执行 sqlite 操作
   ipcMain.on('sqlite:operate', (_, data) => {
-    const { action, id, sqlArgs } = data as any;
+    const { action, operator = 'run', id, sqlArgs } = data as any;
     if (action === 'connect') {
       dbInstance = initDB('./src/local-storage/sqlite/test-main.db');
     }
@@ -68,8 +67,21 @@ module.exports = (app: any) => {
     if (action === 'exec') {
       if (dbInstance) {
         dbInstance.serialize(() => {
-          dbInstance.run(...sqlArgs, (err: Error, row: any) => {
-            // console.log(row.id + ": " + row.info);
+          dbInstance[operator](...sqlArgs, (err: Error, row: any) => {
+            if (err) {
+              window.webContents.send('sqlite:operate:reply', {
+                id,
+                status: 'failed',
+                cause: err?.message,
+              });
+              return;
+            }
+
+            window.webContents.send('sqlite:operate:reply', {
+              id,
+              result: row,
+              status: 'success',
+            });
           });
         });
       }

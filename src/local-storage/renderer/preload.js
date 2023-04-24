@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld('_electron_bridge', {
   // browserWin -> renderer 进程执行 sqlite 操作
   sqlExec: async (operator, ...args) => {
     // 转为 Promise
+    operator = operator || 'run';
     return new Promise((resolve, reject) => {
       if (dbInstance) {
         dbInstance.serialize(() => {

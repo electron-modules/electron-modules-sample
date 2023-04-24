@@ -264,34 +264,31 @@ class MainApp {
 
     const endTime = Date.now();
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
-    await window._electron_bridge.sqlClose();
+    // await window._electron_bridge.sqlClose();
   }
 
   async runSQLiteElectronIPCToMain(type) {
     const { count } = this.runnerConfig;
     const startTime = Date.now();
     this.log(type, `start time: ${startTime}, count: ${count}`);
-    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
-      id: 'connect',
+
+    await this.connectIpcRenderAsync('sqlite:operate', 'connect', {
       action: 'connect',
     });
 
-    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
-      id: 'drop',
+    await this.connectIpcRenderAsync('sqlite:operate', 'drop', {
       action: 'exec',
       sqlArgs: ['DROP TABLE IF EXISTS todo_electron_ipc;'],
     });
 
-    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
-      id: 'init',
+    await this.connectIpcRenderAsync('sqlite:operate', 'init', {
       action: 'exec',
       sqlArgs: ['CREATE TABLE todo_electron_ipc (id int, description varchar);'],
     });
 
     for (let i = 0; i < count; i++) {
       // 无法确保已经写入成功，只能发送消息成功
-      window._electron_bridge.ipcRenderer.send('sqlite:operate', {
-        id: `insert${i}`,
+      await this.connectIpcRenderAsync('sqlite:operate', `insert${i}`, {
         action: 'exec',
         sqlArgs: [
           'INSERT INTO todo_electron_ipc VALUES (?,?)',
@@ -301,20 +298,57 @@ class MainApp {
 
       console.log('Data added successfully');
     }
-    window._electron_bridge.ipcRenderer.send('sqlite:operate', {
-      id: `select_${i}`,
-      action: 'exec',
-      sqlArgs: [
-        'SELECT * FROM todo_electron_ipc where id = ?',
-        [count],
-      ],
-    });
+
+    // 轮训等待写入完成
+    let cnt;
+    while (cnt !== count) {
+      const res = await this.connectIpcRenderAsync('sqlite:operate', 'select_total', {
+        action: 'exec',
+        operator: 'get',
+        sqlArgs: [
+          'SELECT count(*) as cnt FROM todo_electron_ipc',
+        ],
+      }, { needRes: true });
+      if (res.cnt === count) {
+        break;
+      } else {
+        await sleep(50);
+      }
+    }
 
     const endTime = Date.now();
     this.log(type, `end time: ${endTime}, use ${((endTime - startTime) / 1000).toFixed(2)}s`);
-    await window._electron_bridge.ipcRenderer.send('sqlite:operate', {
-      id: 'close',
-      action: 'close',
+
+    // await this.connectIpcRenderAsync('sqlite:operate', 'close', {
+    //   action: 'close',
+    // });
+  }
+
+  async connectIpcRenderAsync(channel, msgId, args, options = { needRes: false }) {
+    // 直接发送
+    if (!options.needRes) {
+      window._electron_bridge.ipcRenderer.send(channel, {
+        ...args,
+        id: msgId,
+      });
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      window._electron_bridge.ipcRenderer.on(`${channel}:reply`, (event, { id, result, status, cause }) => {
+        if (msgId === id) {
+          if (status === 'success') {
+            resolve(result);
+          } else {
+            reject(new Error(cause));
+          }
+        }
+      });
+
+      window._electron_bridge.ipcRenderer.send('sqlite:operate', {
+        ...args,
+        id: msgId,
+      });
     });
   }
 
