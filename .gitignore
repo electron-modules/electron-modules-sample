@@ -6,3 +6,4 @@ fixtures/demo.app
 *.sw*
 *.un~
 .electrom
+dist

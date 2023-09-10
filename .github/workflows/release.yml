@@ -1,0 +1,63 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '!.github/workflows/ci.yml'
+      - '!.github/workflows/release.yml'
+      - '**.md'
+      - .gitignore
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: 'bash'
+
+jobs:
+  draft_release:
+
+    permissions:
+      contents: write # Allows this job to create releases
+
+    strategy:
+      fail-fast: true
+      matrix:
+        # os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-latest, windows-latest ]
+        # os: [ macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Git Source
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install --force
+
+      - name: Build Package
+        run: npm run build
+
+      - name: Compile artifacts and upload them to github release
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_wait_seconds: 15
+          retry_on: error
+          shell: 'bash'
+          command: electron-builder build --config .electron-builder.config.js --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          
