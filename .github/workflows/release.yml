@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: npm install --force
 
-      - name: tsc
+      - name: Typescript Compile
         continue-on-error: true
         run: npm run tsc
 
