@@ -1,10 +1,10 @@
 {
   "name": "electron-modules-sample",
+  "version": "0.1.0",
   "private": true,
   "description": "electron modules sample",
   "keywords": [
-    "electron",
-    "sample"
+    "electron"
   ],
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "cross-env": "^7.0.3",
     "dexie": "^3.2.3",
     "easy-i18n-cli": "1",
+    "electron-builder": "^24.6.4",
     "electron-installer-dmg": "^4.0.0",
     "eslint": "7",
     "eslint-config-egg": "^5.1.1",
@@ -48,7 +49,7 @@
     "git-contributor": "*",
     "gulp": "^4.0.2",
     "gulp-nodemon": "^2.5.0",
-    "husky": "^8.0.3",
+    "husky": "4",
     "lint-staged": "^13.2.1",
     "mocha": "*",
     "monitor.js": "^2.0.1",
@@ -68,8 +69,12 @@
     "translate": "easy-i18n-cli -c ./i18n.config.js",
     "translate:check": "npm run translate -- --check",
     "contributor": "git-contributor",
-    "ss": "python3 -m http.server 8888",
-    "prepare": "husky install"
+    "ss": "python3 -m http.server 8888"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "license": "MIT"
 }
