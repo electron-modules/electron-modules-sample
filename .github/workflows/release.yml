@@ -1,0 +1,55 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '!.github/workflows/ci.yml'
+      - '!.github/workflows/release.yml'
+      - '**.md'
+      - .gitignore
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: 'bash'
+
+jobs:
+  draft_release:
+
+    permissions:
+      contents: write # Allows this job to create releases
+
+    strategy:
+      fail-fast: true
+      matrix:
+        # os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-latest, windows-latest ]
+        # os: [ macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+
+      - run: npm run build
+
+      - name: Compile artifacts ${{ inputs.dry-run && '' || 'and upload them to github release' }}
+        # I use this action because it is capable of retrying multiple times if there are any issues with the distribution server
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_wait_seconds: 15
+          retry_on: error
+          shell: 'bash'
+          command: echo $CSC_LINK && echo $CSC_KEY_PASSWORD && npx --no-install electron-builder --config .electron-builder.config.js --publish ${{ inputs.dry-run && 'never' || 'always' }}
