@@ -54,6 +54,6 @@ jobs:
           retry_wait_seconds: 15
           retry_on: error
           shell: 'bash'
-          command: npm run build
+          command: npm run build:main
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
