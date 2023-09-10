@@ -66,6 +66,8 @@
     "dev:watch": "gulp dev-app --watch",
     "test": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . --fix",
+    "tsc": "tsc -p tsconfig.json",
+    "build": "npm run tsc && npm run build:main",
     "build:main": "electron-builder build --config .electron-builder.config.js",
     "reset:db": "sh ./scripts/clean-db.sh",
     "translate": "easy-i18n-cli -c ./i18n.config.js",
