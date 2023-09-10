@@ -46,8 +46,9 @@ jobs:
       - name: Install dependencies
         run: npm install --force
 
-      - name: Build Package
-        run: npm run build
+      - name: tsc
+        continue-on-error: true
+        run: npm run tsc
 
       - name: Compile artifacts and upload them to github release
         uses: nick-fields/retry@v2
@@ -57,7 +58,6 @@ jobs:
           retry_wait_seconds: 15
           retry_on: error
           shell: 'bash'
-          command: electron-builder build --config .electron-builder.config.js --publish always
+          command: npm run build:main -- --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          

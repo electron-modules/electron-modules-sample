@@ -22,10 +22,9 @@
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": false,
     "resolveJsonModule": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "outDir": "lib"
+    "skipLibCheck": true
   },
+  "outDir": "./",
   "include": [
     "src/**/*",
   ],
