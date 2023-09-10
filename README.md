@@ -4,6 +4,7 @@
 
 [![CI](https://github.com/electron-modules/electron-modules-sample/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/electron-modules/electron-modules-sample/actions/workflows/ci.yml)
 [![Release](https://github.com/electron-modules/electron-modules-sample/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/electron-modules/electron-modules-sample/actions/workflows/release.yml)
+[![Download](https://img.shields.io/badge/Download-passing-brightgreen?logo=github)](https://github.com/electron-modules/electron-modules-sample/releases)
 
 The All-In-One sample for https://github.com/electron-modules
 
@@ -19,6 +20,13 @@ The All-In-One sample for https://github.com/electron-modules
 
 ```bash
 $ npm run dev
+```
+
+## Download Usage
+
+```bash
+$ sudo spctl --master-disable
+$ sudo xattr -rd com.apple.quarantine /Applications/ElectronModules.app
 ```
 
 <!-- GITCONTRIBUTOR_START -->
