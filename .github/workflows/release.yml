@@ -46,9 +46,6 @@ jobs:
       - name: Install dependencies
         run: npm install --force
 
-      - name: Build Package
-        run: npm run build
-
       - name: Compile artifacts and upload them to github release
         uses: nick-fields/retry@v2
         with:
